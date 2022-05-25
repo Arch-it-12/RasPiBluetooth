@@ -1,8 +1,5 @@
-from gpiozero.pins.pigpio import PiGPIOFactory
-from gpiozero import Device, Motor, DistanceSensor
-from signal import pause
+from gpiozero import Motor, DistanceSensor
 
-Device.pin_factory = PiGPIOFactory()
 # TODO Forward should turns the motor COUNTER-CLOCKWISE
 LMOTORA: str = "GPIO27"
 LMOTORB: str = "GPIO22"
@@ -29,7 +26,7 @@ left_motor: Motor = Motor(LMOTORA, LMOTORB)
 right_motor: Motor = Motor(RMOTORA, RMOTORB)
 bot_motor: Motor = Motor(BMOTORA, BMOTORB)
 
-ultrasonic = DistanceSensor(trigger=TRIG, echo=ECHO, threshold_distance=THRESH)
+ultrasonic: DistanceSensor = DistanceSensor(trigger=TRIG, echo=ECHO, threshold_distance=THRESH)
 
 
 def forward() -> None:
@@ -67,9 +64,3 @@ def down() -> None:
 
 def botOff() -> None:
     bot_motor.stop()
-
-
-ultrasonic.when_in_range = up
-ultrasonic.when_out_of_range = botOff
-
-pause()
