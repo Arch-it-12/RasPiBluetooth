@@ -1,10 +1,11 @@
 import keyboard as kb
 import socket
+import sys
 
-raspi_add = socket.gethostname()  # TODO Revert
-port = 3
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TODO Remove
-# s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
+raspi_add = sys.argv[1]
+port = 30 if len(sys.argv) <= 2 else int(sys.argv[2])
+
+s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
 s.connect((raspi_add, port))
 
 state = "stop"
@@ -40,7 +41,6 @@ def down(e):
 
 def stop(e):
     global state
-    print("stop")
     if e.name in ("up", "down", "left", "right") and e.name == state:
         state = "stop"
         s.send("stop".encode())
