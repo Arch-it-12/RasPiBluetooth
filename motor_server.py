@@ -1,6 +1,6 @@
 from gpiozero import Motor, DistanceSensor
+from gpiozero.pins.pigpio import PiGPIOFactory
 
-# TODO Forward should turns the motor COUNTER-CLOCKWISE
 LMOTORA: str = "GPIO27"
 LMOTORB: str = "GPIO22"
 
@@ -10,23 +10,16 @@ RMOTORB: str = "GPIO24"
 BMOTORA: str = "GPIO5"
 BMOTORB: str = "GPIO6"
 
-""" Connect the GND pin of the sensor to a ground pin on the Pi.
-Connect the TRIG pin of the sensor a GPIO pin.
-Connect one end of a 330Ω resistor to the ECHO pin of the sensor.
-Connect one end of a 470Ω resistor to the GND pin of the sensor.
-Connect the free ends of both resistors to another GPIO pin. This forms the required voltage divider.
-Finally, connect the VCC pin of the sensor to a 5V pin on the Pi. """
+TRIG: str = "GPIO13"
+ECHO: str = "GPIO26"
+THRESH: int = 1  # Meters
 
-TRIG = "GPIO13"
-ECHO = "GPIO26"
-THRESH = 1  # Meters
-
-# Labelled when looking from "behind" (rotors facing towards you)
 left_motor: Motor = Motor(LMOTORA, LMOTORB)
 right_motor: Motor = Motor(RMOTORA, RMOTORB)
 bot_motor: Motor = Motor(BMOTORA, BMOTORB)
 
-ultrasonic: DistanceSensor = DistanceSensor(trigger=TRIG, echo=ECHO, threshold_distance=THRESH)
+ultrasonic: DistanceSensor = DistanceSensor(trigger=TRIG, echo=ECHO, threshold_distance=THRESH,
+                                            pin_factory=PiGPIOFactory())
 
 
 def forward() -> None:
