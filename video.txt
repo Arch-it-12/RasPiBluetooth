@@ -8,7 +8,7 @@ sudo apt-get upgrade
 sudo rpi-update
 
 # Get the source code for the V4L utilities
-git clone git://git.linuxtv.org/v4l-utils.git
+git clone https://git.linuxtv.org/v4l-utils.git
 cd v4l-utils
 
 # Install some packages needed to build it
