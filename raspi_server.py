@@ -1,7 +1,7 @@
 import socket
-from motor_server import *
+from motor_server import ultrasonic, forward, backward, left, right, up, noMovement, botOff
 
-# TODO Information received from Raspberry Pi
+# TODO Information from Raspberry Pi
 RASPI_ADD: str = ""
 PORT: int = 30  # 1-30, change to be consistent with device port if occupied on either device
 
@@ -25,13 +25,13 @@ print(f"Connected on address {address}")
 # Begin listening for commands
 while True:
     data: str = client.recv(1024).decode()
-    if data == "up":
+    if data == "w":
         forward()
-    elif data == "down":
-        backward()
-    elif data == "left":
+    elif data == "a":
         left()
-    elif data == "right":
+    elif data == "s":
+        backward()
+    elif data == "d":
         right()
     elif data == "stop":
         noMovement()

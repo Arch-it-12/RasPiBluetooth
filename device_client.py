@@ -27,15 +27,16 @@ def stop(e) -> None:
 
 
 # Assign callbacks to key-presses
-kb.on_press_key("left", move)
-kb.on_press_key("right", move)
-kb.on_press_key("up", move)
-kb.on_press_key("down", move)
+kb.on_press_key("w", move)
+kb.on_press_key("a", move)
+kb.on_press_key("s", move)
+kb.on_press_key("d", move)
 
-kb.on_release_key("left", stop)
-kb.on_release_key("right", stop)
-kb.on_release_key("up", stop)
-kb.on_release_key("down", stop)
+kb.on_release_key("w", stop)
+kb.on_release_key("a", stop)
+kb.on_release_key("s", stop)
+kb.on_release_key("d", stop)
+
 
 # Prevent termination
 kb.wait()
