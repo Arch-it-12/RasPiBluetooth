@@ -12,14 +12,16 @@ BMOTORB: str = "GPIO6"
 
 TRIG: str = "GPIO13"
 ECHO: str = "GPIO26"
-THRESH: int = 1  # Meters
+THRESH: int = 0.5  # Meters
 
 left_motor: Motor = Motor(LMOTORA, LMOTORB)
 right_motor: Motor = Motor(RMOTORA, RMOTORB)
 bot_motor: Motor = Motor(BMOTORA, BMOTORB)
+  
+factory = PiGPIOFactory()
 
 ultrasonic: DistanceSensor = DistanceSensor(trigger=TRIG, echo=ECHO, threshold_distance=THRESH,
-                                            pin_factory=PiGPIOFactory())
+                                            pin_factory=factory)
 
 
 def forward() -> None:
