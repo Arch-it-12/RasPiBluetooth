@@ -1,5 +1,4 @@
 from gpiozero import Motor, DistanceSensor
-from gpiozero.pins.pigpio import PiGPIOFactory
 
 LMOTORA: str = "GPIO27"
 LMOTORB: str = "GPIO22"
@@ -10,18 +9,15 @@ RMOTORB: str = "GPIO24"
 BMOTORA: str = "GPIO5"
 BMOTORB: str = "GPIO6"
 
-TRIG: str = "GPIO13"
-ECHO: str = "GPIO26"
+TRIG: str = "GPIO26"
+ECHO: str = "GPIO4"
 THRESH: int = 0.5  # Meters
 
 left_motor: Motor = Motor(LMOTORA, LMOTORB)
 right_motor: Motor = Motor(RMOTORA, RMOTORB)
 bot_motor: Motor = Motor(BMOTORA, BMOTORB)
   
-factory = PiGPIOFactory()
-
-ultrasonic: DistanceSensor = DistanceSensor(trigger=TRIG, echo=ECHO, threshold_distance=THRESH,
-                                            pin_factory=factory)
+ultrasonic: DistanceSensor = DistanceSensor(trigger=TRIG, echo=ECHO, threshold_distance=THRESH)
 
 
 def forward() -> None:
