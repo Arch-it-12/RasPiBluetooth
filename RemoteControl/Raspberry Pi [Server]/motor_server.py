@@ -11,7 +11,7 @@ BMOTORB: str = "GPIO6"
 
 TRIG: str = "GPIO26"
 ECHO: str = "GPIO4"
-THRESH: int = 0.5  # Meters
+THRESH: float = 0.5  # Meters
 
 left_motor: Motor = Motor(LMOTORA, LMOTORB)
 right_motor: Motor = Motor(RMOTORA, RMOTORB)
@@ -40,7 +40,7 @@ def right() -> None:
     right_motor.backward()
 
 
-def noMovement() -> None:
+def no_movement() -> None:
     left_motor.stop()
     right_motor.stop()
 
@@ -53,5 +53,5 @@ def down() -> None:
     bot_motor.backward()
 
 
-def botOff() -> None:
+def bot_off() -> None:
     bot_motor.stop()
