@@ -1,0 +1,5 @@
+# cd /etc/rc.local
+
+sudo python3 /home/pi/Documents/RasPiBluetooth/RemoteControl/RaspberryPi[Server]/raspi_server.py &
+sudo python3 /home/pi/Documents/RasPiBluetooth/Stream/video_stream.py &
+exit 0
