@@ -2,7 +2,7 @@ import keyboard as kb
 import socket
 
 # TODO Information received from Raspberry Pi
-RASPI_ADD = ""
+RASPI_ADD = "B8:27:EB:82:E3:A9"
 PORT = 30  # 1-30, change to be consistent with raspi port if occupied on either device
 STATE = "stop"
 
