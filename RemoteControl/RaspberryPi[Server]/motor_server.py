@@ -11,13 +11,14 @@ BMOTORB: str = "GPIO6"
 
 TRIG: str = "GPIO26"
 ECHO: str = "GPIO4"
-THRESH: float = 0.5  # Meters
+DISTANCE: float = 4.0 # Meters; Maximum range of the ultrasonic
+THRESH: float = 1.0  # Meters; Threshold to activate "in range" event
 
 left_motor: Motor = Motor(LMOTORA, LMOTORB)
 right_motor: Motor = Motor(RMOTORA, RMOTORB)
 bot_motor: Motor = Motor(BMOTORA, BMOTORB)
   
-ultrasonic: DistanceSensor = DistanceSensor(trigger=TRIG, echo=ECHO, threshold_distance=THRESH)
+ultrasonic: DistanceSensor = DistanceSensor(echo=ECHO, trigger=TRIG, max_distance=DISTANCE, threshold_distance=THRESH)
 
 
 def forward() -> None:
