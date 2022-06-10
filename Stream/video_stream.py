@@ -77,7 +77,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-with picamera.PiCamera(resolution='1920*1080', framerate=30) as camera:
+with picamera.PiCamera(resolution='1920x1080', framerate=30) as camera:
     output = StreamingOutput()
     camera.start_recording(output, format='mjpeg')
     try:
