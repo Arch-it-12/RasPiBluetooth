@@ -14,37 +14,11 @@ ARUCO_PARAMS = cv2.aruco.DetectorParameters_create()
 # Distance Constants
 ACTUAL_LENGTH = 10.5  # Actual length of the side of the april tag (cm)
 TEST_DISTANCE = 100  # Distance from which the measurement was taken (cm)
-PIXEL_LENGTH = 113  # Length of the side in pixels at TEST_DISTANCE cm away (px)
+PIXEL_LENGTH_INBUILT = 85
+PIXEL_LENGTH_EXTERNAL = 113  # Length of the side in pixels at TEST_DISTANCE cm away (px)
 
-FOCAL_LENGTH = (PIXEL_LENGTH * TEST_DISTANCE) / ACTUAL_LENGTH
+FOCAL_LENGTH = (PIXEL_LENGTH_INBUILT * TEST_DISTANCE) / ACTUAL_LENGTH
 FW = ACTUAL_LENGTH * FOCAL_LENGTH
-
-# Tag Constants
-FRONT = 430
-RIGHT = 431
-BACK = 432
-LEFT = 433
-
-STATION_A = 434
-
-STATE = "freeze"
-TARGET_DISTANCE_CM = 0
-
-# found = False
-# while not found:
-#     frame = STREAM.read()
-#     frame = imutils.resize(frame, width=1000)
-#
-#     (corners, ids, rejected) = cv2.aruco.detectMarkers(frame, ARUCO_DICT, parameters=ARUCO_PARAMS)
-#
-#     if len(corners) >= 1:
-#         for c, marker_id in zip(corners, ids):
-#             if marker_id == 423:  # TODO Change to "STATION_A"
-#                 ptA, ptB, ptC, ptD = points(c)
-#                 side_length = (pyth(ptA, ptB) + pyth(ptB, ptC) + pyth(ptC, ptD) + pyth(ptD, ptA)) / 4
-#                 TARGET_DISTANCE_CM = FW / side_length
-#                 TARGET_MP = midpoint(ptA, ptC)
-#                 found = True
 
 while True:
     frame = STREAM.read()
@@ -60,8 +34,6 @@ while True:
             side_length = max(pyth(ptA, ptB), pyth(ptB, ptC), pyth(ptC, ptD), pyth(ptD, ptA))
             measured_distance_cm = FW / side_length
 
-            # if TARGET_DISTANCE_CM - measured_distance_cm <= 15.0 and STATE in ("freeze", "forward", "back"):
-
             # draw the bounding box of the AprilTag detection
             cv2.line(frame, ptA, ptB, (0, 255, 0), 2)
             cv2.line(frame, ptB, ptC, (0, 255, 0), 2)
@@ -72,8 +44,6 @@ while True:
             cv2.putText(frame, str(marker_id), (ptA[0], ptD[1] - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
             cv2.putText(frame, "%.2fm" % (measured_distance_cm / 100), (ptB[0], ptC[1] - 15), cv2.FONT_HERSHEY_SIMPLEX,
                         0.5, (0, 255, 0), 1)
-
-            # print(np.arccos(dot(ptA, ptC, ptB) / (pyth(ptA, ptB) * pyth(ptB, ptC))))
 
     cv2.imshow("Camera Feed", frame)
     x = cv2.waitKey(1)
