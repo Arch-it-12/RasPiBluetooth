@@ -2,27 +2,31 @@ import sys
 
 import cv2
 import imutils
+import picamera
 from imutils.video import VideoStream
 
 from methods import pyth, points, midpoint, center
 from motor_server import ultrasonic, left, right, up, down, forward, no_movement, bot_off
 
 # ArUco Constants
-STREAM = VideoStream(src=0).start()
+# STREAM = VideoStream(src=1).start()
 ARUCO_DICT = cv2.aruco.Dictionary_get(cv2.aruco.DICT_APRILTAG_36h11)
 ARUCO_PARAMS = cv2.aruco.DetectorParameters_create()
 
 TARGET_TAG = 423
 TARGET_PX_DISTANCE = 655
 
-frame = imutils.resize(STREAM.read(), width=1000)
+frame = None
+picamera.capture(frame, format="png")
+frame = imutils.resize(frame, width=1000)
 FRAME_CENTER = (int(frame.shape[1] / 2), int(frame.shape[0] / 2))
 
 flag = True
 is_turning = False
 
 while flag:
-    frame = STREAM.read()
+    frame = None
+    picamera.capture(frame, format="png")
     frame = imutils.resize(frame, width=1000)
 
     (corners, ids, rejected) = cv2.aruco.detectMarkers(frame, ARUCO_DICT, parameters=ARUCO_PARAMS)
