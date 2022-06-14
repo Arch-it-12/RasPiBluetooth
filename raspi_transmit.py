@@ -21,9 +21,10 @@ print("Waiting for connection...")
 client, address = s.accept()
 print(f"Connected on address {address}")
 
+pc = picamera.PiCamera()
 while True:
     frame = None
-    picamera.capture(frame, format="png")
+    pc.capture(frame, format="png")
 
     frame = bytes(frame)
     start = 0
