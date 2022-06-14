@@ -1,11 +1,19 @@
+import io
+import socket
 import sys
 
 import cv2
 import imutils
-from imutils.video import VideoStream
 
 from methods import pyth, points, midpoint, center
-from motor_server import ultrasonic, left, right, up, down, forward, no_movement, bot_off
+
+# TODO Information received from Raspberry Pi
+RASPI_ADD = "10.0.0.27"
+PORT = 30  # 1-30, change to be consistent with raspi port if occupied on either device
+
+# Connect to raspi bluetooth socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((RASPI_ADD, PORT))
 
 # ArUco Constants
 # STREAM = VideoStream(src=1).start()
@@ -15,8 +23,18 @@ ARUCO_PARAMS = cv2.aruco.DetectorParameters_create()
 TARGET_TAG = 423
 TARGET_PX_DISTANCE = 655
 
-frame = None
-picamera.capture(frame, format="png")
+
+def get_image():
+    image = s.recv(1024)
+    t = image
+
+    while t != b"Complete":
+        image += s.recv(1024)
+
+    return image
+
+
+frame = cv2.imread(io.BytesIO(get_image()))
 frame = imutils.resize(frame, width=1000)
 FRAME_CENTER = (int(frame.shape[1] / 2), int(frame.shape[0] / 2))
 
@@ -24,8 +42,9 @@ flag = True
 is_turning = False
 
 while flag:
-    frame = None
-    picamera.capture(frame, format="png")
+    data = ""
+
+    frame = cv2.imread(io.BytesIO(get_image()))
     frame = imutils.resize(frame, width=1000)
 
     (corners, ids, rejected) = cv2.aruco.detectMarkers(frame, ARUCO_DICT, parameters=ARUCO_PARAMS)
@@ -54,39 +73,36 @@ while flag:
             if mp[0] in range(FRAME_CENTER[0] - 15, FRAME_CENTER[0] + 16) and mp[1] in range(FRAME_CENTER[1] - 15,
                                                                                              FRAME_CENTER[1] + 16):
                 is_turning = False
-                ultrasonic.threshold = ultrasonic.distance
-                ultrasonic.when_in_range = up
-                ultrasonic.when_out_of_range = bot_off
+                data += "00;"
+                data += "11;"
 
             if in_range and not is_turning:
                 print("forward")
-                forward()
+                data += "forward;"
             elif not in_range or is_turning:
                 is_turning = True
-                ultrasonic.when_in_range = None
-                ultrasonic.when_out_of_range = None
+                data += "10"
 
                 if mp[0] >= FRAME_CENTER[0] + 15:
                     print("right")
-                    right()
+                    data += "right"
                 elif mp[0] <= FRAME_CENTER[0] - 15:
                     print("left")
-                    left()
+                    data += "left"
 
                 if mp[1] >= FRAME_CENTER[1] + 15:
                     print("down")
-                    down()
+                    data += "down"
                 elif mp[1] <= FRAME_CENTER[1] - 15:
                     print("up")
-                    up()
+                    data += "up"
 
             if max(pyth(ptA, ptB), pyth(ptB, ptC), pyth(ptC, ptD), pyth(ptD, ptA)) > TARGET_PX_DISTANCE:
                 print("arrived")
-                no_movement()
+                data += "nomov"
 
-                ultrasonic.threshold = ultrasonic.distance
-                ultrasonic.when_in_range = up
-                ultrasonic.when_out_of_range = bot_off
+                data += "00"
+                data += "11"
 
                 flag = False
                 break
